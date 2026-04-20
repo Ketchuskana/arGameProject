@@ -8,12 +8,10 @@ class BoostManager:
         self.boost_start = 0
 
     def update(self):
-        # gain automatique toutes les 60s
         if time.time() - self.last_gain_time >= 60:
             self.available_boosts += 1
             self.last_gain_time = time.time()
 
-        # durée boost (2 sec vitesse + 5 sec invincible)
         if self.active and time.time() - self.boost_start >= 5:
             self.active = False
 

@@ -5,7 +5,6 @@ from obstacle import Obstacle
 from fuel import Fuel
 from boost import BoostManager
 from voice_control import VoiceControl
-from head_control import HeadControl
 
 # --- Initialisation ---
 pygame.init()
@@ -15,11 +14,11 @@ pygame.display.set_caption("Jeu de survie routier")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 32)
 big_font = pygame.font.SysFont(None, 48)
+speed_multiplier = 1
 
 # Managers
 boost_manager = BoostManager()
 voice = VoiceControl()
-head = HeadControl()
 
 # Joueur
 player = Player(WIDTH//2 - 25, HEIGHT-100, 5, "assets/travel.png")
@@ -62,7 +61,7 @@ game_over = False
 
 # Fonction de reset du jeu
 def reset_game():
-    global score, lives, level, obstacle_speed, obstacle_list, fuel_list, start_time, last_speed_increase, game_over
+    global score, lives, level, obstacle_speed, obstacle_list, fuel_list, start_time, last_speed_increase, game_over, speed_multiplier
     score = 0
     lives = 3
     level = 1
@@ -72,35 +71,33 @@ def reset_game():
     start_time = time.time()
     last_speed_increase = start_time
     game_over = False
+    speed_multiplier = 1
 
 # Boucle principale
 running = True
-last_voice_time = 0
 while running:
     screen.fill((0,0,0))
     draw_background(screen, WIDTH, HEIGHT)
     keys = pygame.key.get_pressed()
 
-    current_time = time.time()
-    if current_time - last_voice_time > 2:
-        last_voice_time = current_time  
-
-    head.update()
-    if head.direction == "left":
-        player.rect.x -= player.speed
-
-    elif head.direction == "right":
-        player.rect.x += player.speed
-
     if voice.command:
-        if "boost" in voice.command:
-            boost_manager.activate()
+        print("Commande reçue :", voice.command)
+        
+    if voice.command == "boost":
+        boost_manager.activate()
+        voice.command = None
 
-        if "restart" in voice.command and game_over:
-            reset_game()
+    elif voice.command == "restart" and game_over:
+        reset_game()
+        voice.command = None
 
-        if "quit" in voice.command and game_over:
-            close_game()
+    elif voice.command == "quit":
+        pygame.quit()
+        sys.exit()
+
+    elif voice.command == "speed":
+        speed_multiplier = 2
+        voice.command = None
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -129,10 +126,11 @@ while running:
 
         # Déplacement obstacles
         for obs in obstacle_list[:]:
+            # ⚡ gestion vitesse (boost prioritaire)
             if boost_manager.active:
                 obs.speed = obstacle_speed * 2
             else:
-                obs.speed = obstacle_speed
+                obs.speed = obstacle_speed * speed_multiplier
 
             obs.update()
             if not boost_manager.active and obs.rect.colliderect(player.hitbox):
@@ -168,6 +166,9 @@ while running:
         if boost_manager.active:
             screen.blit(font.render("BOOST ACTIVÉ", True, (0,255,0)), (10,130))
 
+        if speed_multiplier > 1:
+            screen.blit(font.render("MODE RAPIDE", True, (255,100,0)), (10,160))
+
         # Texte
         elapsed_time = int(current_time - start_time)
         screen.blit(font.render(f"Score: {score}", True, (255,255,255)), (10,10))
@@ -187,9 +188,9 @@ while running:
         replay_rect = pygame.Rect(WIDTH//2-100, HEIGHT//2+10, 90, 40)
         quit_rect = pygame.Rect(WIDTH//2+10, HEIGHT//2+10, 90, 40)
         pygame.draw.rect(screen, (0,100,200), replay_rect)
-        screen.blit(font.render("Dites Rejouer pour recommencer", True, (255,255,255)), (WIDTH//2-90, HEIGHT//2+18))
+        screen.blit(font.render("Dis Rejouer", True, (255,255,255)), (WIDTH//2-90, HEIGHT//2+18))
         pygame.draw.rect(screen, (200,0,0), quit_rect)
-        screen.blit(font.render("Quitter", True, (255,255,255)), (WIDTH//2+20, HEIGHT//2+18))
+        screen.blit(font.render("Dis Quitter", True, (255,255,255)), (WIDTH//2+20, HEIGHT//2+18))
         if click[0]:
             if replay_rect.collidepoint(mouse_pos):
                 # Reset complet
