@@ -23,7 +23,6 @@ class Player:
         if keys[pygame.K_DOWN] and self.rect.bottom < bottom_limit:
             self.rect.y += self.speed
 
-        # Mettre à jour la hitbox après déplacement
         self.hitbox.topleft = self.rect.topleft
 
     def draw(self, screen):
