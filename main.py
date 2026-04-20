@@ -3,6 +3,9 @@ from player import Player
 from background import draw_background
 from obstacle import Obstacle
 from fuel import Fuel
+from boost import BoostManager
+from voice_control import VoiceControl
+from head_control import HeadControl
 
 # --- Initialisation ---
 pygame.init()
@@ -12,6 +15,11 @@ pygame.display.set_caption("Jeu de survie routier")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 32)
 big_font = pygame.font.SysFont(None, 48)
+
+# Managers
+boost_manager = BoostManager()
+voice = VoiceControl()
+head = HeadControl()
 
 # Joueur
 player = Player(WIDTH//2 - 25, HEIGHT-100, 5, "assets/travel.png")
@@ -52,12 +60,47 @@ last_speed_increase = start_time
 obstacle_speed = 5
 game_over = False
 
+# Fonction de reset du jeu
+def reset_game():
+    global score, lives, level, obstacle_speed, obstacle_list, fuel_list, start_time, last_speed_increase, game_over
+    score = 0
+    lives = 3
+    level = 1
+    obstacle_speed = 5
+    obstacle_list.clear()
+    fuel_list.clear()
+    start_time = time.time()
+    last_speed_increase = start_time
+    game_over = False
+
 # Boucle principale
 running = True
+last_voice_time = 0
 while running:
     screen.fill((0,0,0))
     draw_background(screen, WIDTH, HEIGHT)
     keys = pygame.key.get_pressed()
+
+    current_time = time.time()
+    if current_time - last_voice_time > 2:
+        last_voice_time = current_time  
+
+    head.update()
+    if head.direction == "left":
+        player.rect.x -= player.speed
+
+    elif head.direction == "right":
+        player.rect.x += player.speed
+
+    if voice.command:
+        if "boost" in voice.command:
+            boost_manager.activate()
+
+        if "restart" in voice.command and game_over:
+            reset_game()
+
+        if "quit" in voice.command and game_over:
+            close_game()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -86,8 +129,13 @@ while running:
 
         # Déplacement obstacles
         for obs in obstacle_list[:]:
+            if boost_manager.active:
+                obs.speed = obstacle_speed * 2
+            else:
+                obs.speed = obstacle_speed
+
             obs.update()
-            if obs.rect.colliderect(player.hitbox):
+            if not boost_manager.active and obs.rect.colliderect(player.hitbox):
                 lives -= 1
                 if crash_sound: crash_sound.play()
                 obstacle_list.remove(obs)
@@ -112,6 +160,14 @@ while running:
             else:
                 f.draw(screen)
 
+        # --- UPDATE BOOST ---
+        boost_manager.update()
+
+        # 🔥 BOOST UI
+        screen.blit(font.render(f"Boosts: {boost_manager.available_boosts}", True, (255,255,255)), (10,100))
+        if boost_manager.active:
+            screen.blit(font.render("BOOST ACTIVÉ", True, (0,255,0)), (10,130))
+
         # Texte
         elapsed_time = int(current_time - start_time)
         screen.blit(font.render(f"Score: {score}", True, (255,255,255)), (10,10))
@@ -131,18 +187,13 @@ while running:
         replay_rect = pygame.Rect(WIDTH//2-100, HEIGHT//2+10, 90, 40)
         quit_rect = pygame.Rect(WIDTH//2+10, HEIGHT//2+10, 90, 40)
         pygame.draw.rect(screen, (0,100,200), replay_rect)
-        screen.blit(font.render("Rejouer", True, (255,255,255)), (WIDTH//2-90, HEIGHT//2+18))
+        screen.blit(font.render("Dites Rejouer pour recommencer", True, (255,255,255)), (WIDTH//2-90, HEIGHT//2+18))
         pygame.draw.rect(screen, (200,0,0), quit_rect)
         screen.blit(font.render("Quitter", True, (255,255,255)), (WIDTH//2+20, HEIGHT//2+18))
         if click[0]:
             if replay_rect.collidepoint(mouse_pos):
                 # Reset complet
-                score = 0
-                lives = 3
-                level = 1
-                obstacle_speed = 5
-                obstacle_list.clear()
-                fuel_list.clear()
+                reset_game()
                 start_time = time.time()
                 last_speed_increase = start_time
                 game_over = False
