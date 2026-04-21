@@ -28,7 +28,7 @@ background.py
 3. **Installer Pygame** si ce n’est pas déjà fait :
 
 ```bash
-pip install pygame
+pip install -r requirements.txt
 ````
 
 4. **Lancer le jeu** :
