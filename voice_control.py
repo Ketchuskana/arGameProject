@@ -41,11 +41,14 @@ class VoiceControl:
 
                 print("🎤 VOICE:", text)
 
-                if "boost" in text:
+                if "boost" in text or "bouclier" in text:
                     self.command = "boost"
-                elif "speed" in text:
+
+                elif "speed" in text or "accélérer" in text or "rapide" in text:
                     self.command = "speed"
-                elif "restart" in text:
+
+                elif "restart" in text or "rejouer" in text:
                     self.command = "restart"
-                elif "quit" in text:
+
+                elif "quit" in text or "quitter" in text:
                     self.command = "quit"
