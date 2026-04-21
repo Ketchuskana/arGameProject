@@ -1,56 +1,86 @@
+# 🏎️ Jeu de Survie Routier - VR & Voice Mode
+## 📝 Présentation du projet
+Ce jeu de survie est une expérience immersive développée en Python utilisant Pygame. Il propose un gameplay innovant en intégrant des technologies de vision par ordinateur et de reconnaissance vocale pour offrir une expérience de type "Réalité Augmentée" (AR) / "VR sans casque".
 
-# Mini-Jeu de Survie Routier
+# Projet réalisé par : Salma WADOUACHI et Ketsukana SON ESSOME MOUKOURI.
 
-## projet par : Salma WADOUACHI et Ketsukana SON ESSOME MOUKOURI 
+# 🚀 Fonctionnalités Avancées
+Head Tracking (OpenCV) : Pilotez votre véhicule par des mouvements de tête. Le système utilise votre webcam pour détecter l'offset de votre visage et le traduire en mouvement fluide dans le jeu.
 
-## Installation et lancement
+Commande Vocale (Vosk) : Utilisez des commandes vocales pour activer le "Boost", passer en "Mode Rapide", relancer une partie ("Restart") ou quitter le jeu.
 
-Pour installer et exécuter le jeu :
+Système de Difficulté Dynamique : La vitesse des obstacles augmente toutes les 30 secondes, faisant passer le joueur aux niveaux supérieurs.
 
-1. **Pré-requis** : Python 3.12+ et Pygame 2.6.1.
-2. **Cloner ou copier** le projet dans un dossier, en conservant la structure :
+Gestion de l'Énergie : Ramassez des bidons de Fuel (classique ou Gold) pour augmenter votre score et survivre.
 
+# 📂 Organisation des fichiers
+Plaintext
+/arGameProject
+├── assets/                 # Ressources graphiques et sonores (.png, .mp3)
+├── model/                  # Modèles de langue Vosk pour la reconnaissance vocale
+├── venv/                   # Environnement virtuel Python
+├── main.py                 # Script principal (boucle de jeu et initialisation)
+├── player.py               # Classe Player : gestion du véhicule et hitbox
+├── obstacle.py             # Classe Obstacle : génération et mouvement des ennemis
+├── fuel.py                 # Classe Fuel : gestion des bonus et types de carburant
+├── background.py           # Logique du décor et défilement de la route
+├── head_control.py         # Traitement d'image OpenCV (Multithreading)
+├── voice_control.py        # Moteur de reconnaissance vocale
+├── boost.py                # Gestionnaire de l'état "Boost"
+├── requirements.txt        # Liste des dépendances Python
+└── README.md               # Documentation du projet
+# 🛠️ Installation et Lancement
+1. Pré-requis
 
-```markdown
-/assets
-  car.png, car1.png, ..., car4.png
-  travel.png
-  gasoline.png
-  gasoline-pump.png
-  gamebonus.mp3
-  carcrash.mp3
-  collect_coins.mp3
-main.py
-player.py
-obstacle.py
-fuel.py
-background.py
-```
+Python 3.12 ou supérieur.
 
-3. **Installer Pygame** si ce n’est pas déjà fait :
+Une webcam fonctionnelle (pour le Head Tracking).
 
-```bash
+Un microphone (pour les commandes vocales).
+
+2. Installation
+
+Depuis le terminal, à la racine du projet :
+
+Bash
+Activation de l'environnement virtuel (Optionnel mais recommandé)
+source venv/bin/activate 
+
+Installation des dépendances
 pip install -r requirements.txt
-````
 
-4. **Lancer le jeu** :
+3. Lancement
 
-```bash
+Bash
 python main.py
-```
 
----
+# 🎮 Comment jouer ?
 
-## Comment jouer
+Contrôles
 
-* **Déplacer le joueur** avec les flèches gauche, droite, haut et bas.
-* **Éviter les voitures obstacles**. La collision retire une vie.
-* **Ramasser les bonus fuel verts** pour gagner des points (+10).
-* **Ramasser les Gold Fuel** (pompe à essence) pour doubler les points (+20).
-* **Objectif** : survivre le plus longtemps possible et accumuler des points.
-* **Progression** : tous les 30 secondes, la vitesse des obstacles augmente et un niveau supérieur est affiché.
-* **Game Over** : lorsqu’il n’y a plus de vies, le jeu s’arrête et propose deux boutons : *Rejouer* ou *Quitter*.
-* **Sons** : collision, ramassage de fuel normal ou Gold Fuel, et musique lors du ramassage du bonus spécifique.
-  
-## Lien video test jeu
-https://drive.google.com/file/d/1pkpkT4QkJ32oG6rhtFYz0li8d1AYZ1jB/view?usp=sharing
+Tête : Inclinez la tête à gauche ou à droite pour déplacer la voiture latéralement.
+
+Clavier : Utilisez les flèches directionnelles comme contrôle de secours.
+
+Voix :
+
+"boost" : Accélération temporaire.
+
+"speed" : Active le mode rapide permanent.
+
+"restart" : Relance le jeu après un Game Over.
+
+"quit" : Ferme proprement l'application.
+
+Gameplay
+
+Score : 🟢 Fuel Vert (+10) | ⛽ Pompe Gold (+20).
+
+Vies : Vous commencez avec 3 vies. Une collision avec un véhicule adverse vous retire une vie.
+
+Niveaux : Le niveau augmente toutes les 30 secondes, rendant le jeu plus rapide et difficile.
+
+# 🧠 Points Complexes & Défis Techniques
+Multithreading : Pour éviter les lags, le traitement de la caméra (OpenCV) et de la voix (Vosk) tournent sur des threads séparés du moteur graphique (Pygame).
+
+Lissage de données (Smoothing) : Implémentation d'un algorithme d'interpolation linéaire pour convertir les données brutes de la webcam en mouvements de voiture fluides et agréables.
