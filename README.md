@@ -1,6 +1,8 @@
 
 # Mini-Jeu de Survie Routier
 
+## projet par : Salma WADOUACHI et Ketsukana SON ESSOME MOUKOURI 
+
 ## Installation et lancement
 
 Pour installer et exécuter le jeu :
