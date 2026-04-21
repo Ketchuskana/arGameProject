@@ -2,9 +2,9 @@
 ## 📝 Présentation du projet
 Ce jeu de survie est une expérience immersive développée en Python utilisant Pygame. Il propose un gameplay innovant en intégrant des technologies de vision par ordinateur et de reconnaissance vocale pour offrir une expérience de type "Réalité Augmentée" (AR) / "VR sans casque".
 
-# Projet réalisé par : Salma WADOUACHI et Ketsukana SON ESSOME MOUKOURI.
+## Projet réalisé par : Salma WADOUACHI et Ketsukana SON ESSOME MOUKOURI.
 
-# 🚀 Fonctionnalités Avancées
+## 🚀 Fonctionnalités Avancées
 Head Tracking (OpenCV) : Pilotez votre véhicule par des mouvements de tête. Le système utilise votre webcam pour détecter l'offset de votre visage et le traduire en mouvement fluide dans le jeu.
 
 Commande Vocale (Vosk) : Utilisez des commandes vocales pour activer le "Boost", passer en "Mode Rapide", relancer une partie ("Restart") ou quitter le jeu.
@@ -13,7 +13,7 @@ Système de Difficulté Dynamique : La vitesse des obstacles augmente toutes les
 
 Gestion de l'Énergie : Ramassez des bidons de Fuel (classique ou Gold) pour augmenter votre score et survivre.
 
-# 🛠️ Installation et Lancement
+## 🛠️ Installation et Lancement
 1. Pré-requis
 
 Python 3.12 ou supérieur.
@@ -38,7 +38,7 @@ pip install -r requirements.txt
 Bash
 python main.py
 
-# 🎮 Comment jouer ?
+## 🎮 Comment jouer ?
 
 Contrôles
 
@@ -64,7 +64,7 @@ Vies : Vous commencez avec 3 vies. Une collision avec un véhicule adverse vous 
 
 Niveaux : Le niveau augmente toutes les 30 secondes, rendant le jeu plus rapide et difficile.
 
-# 🧠 Points Complexes & Défis Techniques
+## 🧠 Points Complexes & Défis Techniques
 Multithreading : Pour éviter les lags, le traitement de la caméra (OpenCV) et de la voix (Vosk) tournent sur des threads séparés du moteur graphique (Pygame).
 
 Lissage de données (Smoothing) : Implémentation d'un algorithme d'interpolation linéaire pour convertir les données brutes de la webcam en mouvements de voiture fluides et agréables.
