@@ -13,22 +13,6 @@ Système de Difficulté Dynamique : La vitesse des obstacles augmente toutes les
 
 Gestion de l'Énergie : Ramassez des bidons de Fuel (classique ou Gold) pour augmenter votre score et survivre.
 
-# 📂 Organisation des fichiers
-Plaintext
-/arGameProject
-├── assets/                 # Ressources graphiques et sonores (.png, .mp3)
-├── model/                  # Modèles de langue Vosk pour la reconnaissance vocale
-├── venv/                   # Environnement virtuel Python
-├── main.py                 # Script principal (boucle de jeu et initialisation)
-├── player.py               # Classe Player : gestion du véhicule et hitbox
-├── obstacle.py             # Classe Obstacle : génération et mouvement des ennemis
-├── fuel.py                 # Classe Fuel : gestion des bonus et types de carburant
-├── background.py           # Logique du décor et défilement de la route
-├── head_control.py         # Traitement d'image OpenCV (Multithreading)
-├── voice_control.py        # Moteur de reconnaissance vocale
-├── boost.py                # Gestionnaire de l'état "Boost"
-├── requirements.txt        # Liste des dépendances Python
-└── README.md               # Documentation du projet
 # 🛠️ Installation et Lancement
 1. Pré-requis
 
